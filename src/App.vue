@@ -1,218 +1,127 @@
 <template>
-  <div id="app">
-    <div class="container">
-      <div class="content ui-flex-column">
-        <div class="ui-flex-1">
-          <el-form :model="dialogConfig" label-position="right" label-width="90px" ref="form">
-            <el-form-item
-                    class="w1"
-                    prop="code"
-                    v-show="dialogContent.code"
-                    label="编码">
-              <el-input v-model="dialogConfig.code"  placeholder="新增自动生成编码" diaabled></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="theName"
-                    v-show="dialogContent.theName"
-                    :rules="rules.theName"
-                    label="名称">
-              <el-input v-model="dialogConfig.theName"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="nameShort"
-                    v-show="dialogContent.nameShort"
-                    :rules="rules.nameShort"
-                    label="简码">
-              <el-input v-model="dialogConfig.nameShort"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="theSort"
-                    v-show="dialogContent.theSort"
-                    :rules="rules.theSort"
-                    label="排序">
-              <el-input v-model="dialogConfig.theSort"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="theType"
-                    v-show="dialogContent.theType"
-                    :rules="rules.theType"
-                    label="类型">
-              <el-input v-model="dialogConfig.theType"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="statisticsScope"
-                    v-show="dialogContent.statisticsScope"
-                    label="统计范围">
-              <el-input v-model="dialogConfig.statisticsScope"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="accountLv1Code"
-                    v-show="dialogContent.accountLv1Code"
-                    label="一级科目代码">
-              <el-input v-model="dialogConfig.accountLv1Code"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="lottingPattern"
-                    v-show="dialogContent.lottingPattern"
-                    label="分票方式">
-              <el-input v-model="dialogConfig.lottingPattern"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="adjustDepartCode"
-                    v-show="dialogContent.adjustDepartCode"
-                    label="核算科室">
-              <el-input v-model="dialogConfig.adjustDepartCode"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="lottingDepartCode"
-                    v-show="dialogContent.lottingDepartCode"
-                    label="分票科室">
-              <el-input v-model="dialogConfig.lottingDepartCode"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="preferentialRatio"
-                    v-show="dialogContent.preferentialRatio"
-                    label="优惠比例">
-              <el-input v-model="dialogConfig.preferentialRatio"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="accountLv2Code"
-                    v-show="dialogContent.accountLv2Code"
-                    label="二级科目">
-              <el-input v-model="dialogConfig.accountLv2Code"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w1"
-                    prop="primaryCategoryCode"
-                    v-show="dialogContent.primaryCategoryCode"
-                    label="费用大类">
-              <el-input v-model="dialogConfig.primaryCategoryCode"></el-input>
-            </el-form-item>
-            <el-form-item
-                    class="w2"
-                    prop="status"
-                    v-show="dialogContent.status"
-                    label="状态">
-              <el-switch
-                      v-model="dialogConfig.status"
-                      on-color="#32c081"
-                      on-text="启用"
-                      off-text="停用"
-                      off-color="#ff4949">
-              </el-switch>
-            </el-form-item>
-          </el-form>
+  <div id="app" class="ui-flex-column">
+    <div class="header"></div>
+    <div class="ui-flex-1 ui-flex">
+      <div class="left-menu">
+        <div class="search-container">
+          <el-input icon="search" v-model="leftMenuFilter" placeholder="输入关键字进行搜索"></el-input>
         </div>
-        <div class="ui-flex">
-          <div class="ui-flex-1">
-          </div>
-          <div>
-            <el-button @click="check('form')">检验</el-button>
-            <el-button @click="resetForm('form')">重置</el-button>
-          </div>
+        <div class="item"
+             v-for="(item,index) in  getLeftMenu"
+             :class="{'item-active':index===currentIndex}"
+             @click="leftMenuClick(item,index)">{{item.table_name}}</div>
+      </div>
+      <div class="container ui-flex-1 ui-flex-column">
+        <div class="btn-group">
+          <el-button icon="plus" @click="createClick">新建</el-button>
+          <el-button icon="search" @click="selectClick">查询</el-button>
+          <el-button icon="edit" @click="editClick">编辑</el-button>
+          <el-button icon="edit" @click="editClick">插入</el-button>
+          <el-button icon="caret-right" @click="exportClick">导出</el-button>
+          <el-button icon="delete" @click="deleteClick">删除</el-button>
+        </div>
+        <div class="ui-flex-1" style="margin:10px">
+          <el-table
+                  :data="tableData"
+                  border
+                  style="width: 100%"
+                  max-height="400">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <template v-for="item in tableColumn">
+              <el-table-column
+                      :prop="item"
+                      :label="item">
+              </el-table-column>
+            </template>
+          </el-table>
         </div>
       </div>
     </div>
+    <el-dialog title="新建数据表" v-model="createDialogVisible"></el-dialog>
+    <el-dialog title="查询" v-model="selectDialogVisible" size="full">
+      <div class="btn-group" style="margin-bottom: 20px;">
+        <el-button icon="caret-right" @click="createClick">运行</el-button>
+      </div>
+      <el-input
+              type="textarea"
+              :rows="10"
+              v-model="selectSql">
+      </el-input>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  let rules={
-      //名称
-      theName:[{
-          required:true,
-          message:"名称不能为空",
-          trigger:"blur"
-      }],
-      //简码
-      nameShort:[{
-          required:true,
-          message:"简码不能为空",
-          trigger:"blur"
-      }],
-      //排序
-      theSort:[{
-          type:"number",
-          message:"排序必须是数字",
-          trigger:"blur"
-      }],
-      //类型
-      theType:[{
-          required:true,
-          message:"类型不能为空",
-          trigger:"blur"
-      }]
-  };
+  import $ from "./static/js/common";
+  import {path} from "./config/config"
+  let that;
 export default {
-  name: 'app',
-  data () {
+    data () {
     return {
-        dialogConfig:{
-            //编码
-            code:"",
-            // 名称
-            theName:"",
-            //简码
-            nameShort:"",
-            //排序
-            theSort:"",
-            //状态
-            status:true,
-            //类型
-            theType:"",
-            //统计范围
-            statisticsScope:"",
-            //一级科目代码
-            accountLv1Code:"",
-            //分票方式
-            "lottingPattern":"",
-            //核算科室
-            "adjustDepartCode":"",
-            // 分票科室
-            "lottingDepartCode":"",
-            //优惠比列
-            "preferentialRatio":"",
-            //二级科目
-            "accountLv2Code":"",
-            //费用大类
-            "primaryCategoryCode":"",
-        },
-        rules:rules,
-        dialogContent:{
-                    "code":true,
-                    "theName":true,
-                    "nameShort":true,
-                    "theType":true,
-                    "theSort":true
-        },
+        leftMenu:[],
+        leftMenuFilter:"",
+        currentIndex:-1,
+        tableData:[],
+        tableColumn:[],
+        createDialogVisible:false,
+        selectDialogVisible:false,
+        selectSql:""
     }
   },
+    computed:{
+      getLeftMenu(){
+          return this.leftMenu.filter(function (item) {
+              return item.table_name.indexOf(that.leftMenuFilter) !==-1
+          })
+      }
+    },
     methods:{
-      check(formName){
-          this.$refs[formName].validate((valid) => {
-              if (valid) {
-                  alert('验证通过');
-              } else {
-                  alert("验证失败");
-                  return false;
-              }
-          });
-      },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
+        leftMenuClick(item,index){
+            that.currentIndex=index;
+            that.getTableData(item.table_name)
+        },
+        createClick(){
+            that.createDialogVisible=true;
+        },
+        selectClick(){
+            that.selectDialogVisible=true;
+        },
+        editClick(){
+
+        },
+        exportClick(){
+
+        },
+        deleteClick(){
+
+        },
+        getTables:function () {
+            $.request(path.getTables,{
+                success(res){
+                    that.leftMenu=res.data;
+                    console.log(res.data)
+                }
+            })
+        },
+        getTableData(tableName){
+            $.request(path.getTableData,{
+                data:{
+                    tableName:tableName
+                },
+                success(res){
+                    that.tableColumn=res.data.columns;
+                    that.tableData=res.data.rows;
+                }
+            })
         }
-    }
+    },
+    created(){
+      that=this;
+      that.getTables();
+    },
 }
 </script>
 
@@ -225,33 +134,46 @@ export default {
   html,body{
     height: 100%;
   }
-  .container{
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,.3);
+  #app{
+    height: 100%;
   }
-  .content{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform:translate(-50%,-50%);
-    width: 666px;
-    height: 500px;
-    background-color: #ffffff;
-    border-radius: 3px;
+  .header{
+    height: 80px;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 10px;
+  }
+  .left-menu{
+    width: 200px;
+    border: 1px solid #cccccc;
+    height: 100%;
+    overflow-y: auto;
     box-sizing: border-box;
-    padding: 10px;
+    .search-container{
+      margin: 10px;
+    }
+    .item{
+      line-height: 32px;
+      padding: 0 16px;
+      cursor: default;
+    }
+    .item:hover{
+      background-color: rgba(0,0,0,.1);
+    }
+    .item-active{
+      background-color: rgba(0,0,0,.1);
+    }
   }
-  .el-form-item{
-    float: left;
+  .container{
+    overflow: auto;
   }
-  .w1{
-    width: 50%;
+  .btn-group{
+    padding: 0 10px;
   }
-  .w2{
-    width: 100%;
+  .el-dialog__header{
+    padding: 0 20px!important;
+    line-height: 40px!important;
+  }
+  .el-dialog__body{
+    padding: 10px!important;
   }
 </style>
