@@ -20,6 +20,12 @@
     -webkit-box-flex: $i;
   }
 }
+.ui-pull-left{
+  float: left;
+}
+.ui-pull-right{
+  float: right;
+}
 .ui-flex{
   display: flex;
 }

@@ -1,10 +1,9 @@
 /**
  * Created by zz on 2017/6/1.
  */
-let host="http://localhost:3000";
+let host="http://localhost:3000/systemManage";
 let path={
-    getTables:"/getTables",
-    getTableData:"/getTableData",
+    systemList:"/systemList"
 };
 export {
     host,
