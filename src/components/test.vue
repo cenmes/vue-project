@@ -1,18 +1,9 @@
 <template>
     <div class="menu">
-        <div @click="toggleWidth">toggle</div>
-        <div class="menu-item">
-            <div class="menu-item-top ui-flex">
-                <div>icon</div>
-                <div>一级菜单</div>
-                <div>&gt;</div>
-            </div>
-            <div class="menu-item-list">
-                <div>111</div>
-                <div>222</div>
-                <div>333</div>
-            </div>
-        </div>
+        <div @click="visible=!visible">toggle</div>
+        <transition name="fade">
+            <div v-if="visible" class="ani-t">动画测试</div>
+        </transition>
     </div>
 </template>
 
@@ -21,24 +12,17 @@
         data() {
             return {
                 width:[200,50],
-                state:true
+                state:true,
+                visible:false
             };
         },
         methods: {
 
         },
         computed:{
-            getWidth:{
 
-            }
         },
         mounted() {
-            this.restaurants = this.data.map(function (item) {
-                let obj={};
-                obj.value=item.theName;
-                obj.code=item.code;
-                return obj;
-            });
         }
     }
 </script>
@@ -47,5 +31,22 @@
     @import "../static/css/ui";
     .menu{
         overflow-y: auto;
+        position: relative;
+        height: 300px;
+        .ani-t{
+            border: 1px solid #32c081;
+            border-radius: 3px;
+            line-height: 30px;
+            padding: 0 10px;
+            position: absolute;
+            left: 0;
+            top: 50px;
+        }
+        .fade-enter-active, .fade-leave-active {
+            transition: all 5s
+        }
+        .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+            left:100px;
+        }
     }
 </style>

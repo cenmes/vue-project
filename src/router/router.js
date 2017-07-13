@@ -4,6 +4,8 @@
 import test from "../components/test.vue";
 import systemManage from "../components/systemManage.vue";
 import interfaceManage from "../components/interfaceManage.vue"
+import cp from "../components/cp.vue";
+import login from "../components/login.vue"
 export default [{
     path:"/test",
     component:test,
@@ -13,4 +15,10 @@ export default [{
 },{
     path:"/interfaceManage",
     component:interfaceManage
+},{
+    path:"/cp",
+    component:cp
+},{
+    path:"/login",
+    component:login,
 }]

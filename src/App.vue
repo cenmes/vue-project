@@ -1,162 +1,57 @@
 <template>
-  <div class="menu" :style="getStyle">
-    <div @click="toggleWidth">toggle</div>
-    <div class="menu-item">
-      <div class="menu-item-top ui-flex">
-        <div>icon</div>
-        <div class="ui-flex-1" v-if="state">一级菜单</div>
-        <div v-if="state">&gt;</div>
-      </div>
-      <div class="menu-item-list" :class="{'pos-right':!state}">
-        <div>111</div>
-        <div>222</div>
-        <div>333</div>
-      </div>
-    </div>
-    <div class="menu-item">
-      <div class="menu-item-top ui-flex">
-        <div>icon</div>
-        <div class="ui-flex-1" v-if="state">一级菜单</div>
-        <div v-if="state">&gt;</div>
-      </div>
-      <div class="menu-item-list" :class="{'pos-right':!state}">
-        <div>111</div>
-        <div>222</div>
-        <div>333</div>
-      </div>
-    </div>
-    <div class="menu-item">
-      <div class="menu-item-top ui-flex">
-        <div>icon</div>
-        <div class="ui-flex-1" v-if="state">一级菜单</div>
-        <div v-if="state">&gt;</div>
-      </div>
-      <div class="menu-item-list" :class="{'pos-right':!state}">
-        <div>111</div>
-        <div>222</div>
-        <div>333</div>
-      </div>
-    </div>
-    <div class="menu-item">
-      <div class="menu-item-top ui-flex">
-        <div>icon</div>
-        <div class="ui-flex-1" v-if="state">一级菜单</div>
-        <div v-if="state">&gt;</div>
-      </div>
-      <div class="menu-item-list" :class="{'pos-right':!state}">
-        <div>111</div>
-        <div>222</div>
-        <div>333</div>
-      </div>
-    </div><div class="menu-item">
-    <div class="menu-item-top ui-flex">
-      <div>icon</div>
-      <div class="ui-flex-1" v-if="state">一级菜单</div>
-      <div v-if="state">&gt;</div>
-    </div>
-    <div class="menu-item-list" :class="{'pos-right':!state}">
-      <div>111</div>
-      <div>222</div>
-      <div>333</div>
-    </div>
-  </div>
-    <div class="menu-item">
-      <div class="menu-item-top ui-flex">
-        <div>icon</div>
-        <div class="ui-flex-1" v-if="state">一级菜单</div>
-        <div v-if="state">&gt;</div>
-      </div>
-      <div class="menu-item-list" :class="{'pos-right':!state}">
-        <div>111</div>
-        <div>222</div>
-        <div>333</div>
-      </div>
-    </div>
-    <div class="menu-item">
-      <div class="menu-item-top ui-flex">
-        <div>icon</div>
-        <div class="ui-flex-1" v-if="state">一级菜单</div>
-        <div v-if="state">&gt;</div>
-      </div>
-      <div class="menu-item-list" :class="{'pos-right':!state}">
-        <div>111</div>
-        <div>222</div>
-        <div>333</div>
-      </div>
-    </div>
-    <div class="menu-item">
-      <div class="menu-item-top ui-flex">
-        <div>icon</div>
-        <div class="ui-flex-1" v-if="state">一级菜单</div>
-        <div v-if="state">&gt;</div>
-      </div>
-      <div class="menu-item-list" :class="{'pos-right':!state}">
-        <div>111</div>
-        <div>222</div>
-        <div>333</div>
-      </div>
-    </div>
-    <div class="menu-item">
-      <div class="menu-item-top ui-flex">
-        <div>icon</div>
-        <div class="ui-flex-1" v-if="state">一级菜单</div>
-        <div v-if="state">&gt;</div>
-      </div>
-      <div class="menu-item-list" :class="{'pos-right':!state}">
-        <div>111</div>
-        <div>222</div>
-        <div>333</div>
-      </div>
-    </div>
-    <div class="menu-item">
-      <div class="menu-item-top ui-flex">
-        <div>icon</div>
-        <div class="ui-flex-1" v-if="state">一级菜单</div>
-        <div v-if="state">&gt;</div>
-      </div>
-      <div class="menu-item-list" :class="{'pos-right':!state}">
-        <div>111</div>
-        <div>222</div>
-        <div>333</div>
-      </div>
-    </div>
+  <div id="app" class="ui-flex-column">
+    <div class="top-box" v-if="isLogin">
 
+    </div>
+    <div class="content-box adjust ui-flex">
+      <div class="left-box" v-if="isLogin">
+        登陆了才会显示啊
+      </div>
+      <div class="right-box ui-flex-1">
+        <router-view></router-view>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+    import $ from "./static/js/common";
+    import {path} from "./config/config";
+    import test from "./components/test.vue";
+    let that;
     export default {
-        data() {
+        data () {
             return {
-                width:["200px","50px"],
-                state:true
-            };
-        },
-        methods: {
-            toggleWidth(){
-                this.state=!this.state;
+                isLogin:"",
+                leftMenu:[{
+                    name:"系统管理",
+                    router:"systemManage"
+                },{
+                    name:"接口管理",
+                    router:"interfaceManage"
+                }],
+                currentIndex:-1,
             }
         },
         computed:{
-            getStyle:function () {
-                return {
-                    "width":this.state?(this.width[0]):(this.width[1])
-                }
-            }
         },
-        mounted() {
-            this.restaurants = this.data.map(function (item) {
-                let obj={};
-                obj.value=item.theName;
-                obj.code=item.code;
-                return obj;
-            });
+        methods:{
+            leftMenuClick(item,index){
+                this.currentIndex=index;
+                this.$router.push(item.router);
+            },
+        },
+        created(){
+            that=this;
+            Vue.userInfo?(this.isLogin=true):(this.isLogin=false)
+        },
+        components:{
         }
     }
 </script>
 
 <style lang="scss">
-  @import "./static/css/ui";
+  @import "static/css/ui";
   *{
     padding: 0;
     margin: 0;
@@ -164,18 +59,17 @@
   html,body{
     height: 100%;
   }
-  .menu{
+  #app{
     height: 100%;
-    background-color: rgba(0,0,0,.3);
-    overflow-y: auto;
   }
-  .menu-item{
+  .right-box{
     position: relative;
   }
-  .pos-right{
+  .adjust{
     position: absolute;
-    width: 200px;
-    left: 200px;
+    left: 0;
     top: 0;
+    bottom: 0;
+    right: 0;
   }
 </style>

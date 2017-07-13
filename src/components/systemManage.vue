@@ -101,16 +101,16 @@
         .operation{
             border-bottom: 1px solid #cccccc;
         }
-    }
-    .el-button{
-        border: none;
-        border-radius: unset;
-    }
-    .filter-container{
-        padding: 10px;
-        width: 180px;
-    }
-    .table-container{
-        padding: 10px 10px;
+        .el-button{
+            border: none;
+            border-radius: unset;
+        }
+        .filter-container{
+            padding: 10px;
+            width: 180px;
+        }
+        .table-container{
+            padding: 10px 10px;
+        }
     }
 </style>
