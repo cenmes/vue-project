@@ -54,7 +54,21 @@
             doLogin(){
                 this.$refs["form"].validate((valid) => {
                     if (valid) {
-                        that.$message("验证通过");
+                        console.log(path.login);
+                        $.request(path.login,{
+                            data:that.data,
+                            success(res){
+                                if(res.success){
+                                    $.setStorage("userInfo",res.data);
+                                    that.$message("登录成功");
+                                }else {
+                                    that.$message(res.errorMsg);
+                                }
+                            },
+                            error(){
+                                alert("fuck");
+                            }
+                        })
                     } else {
                         that.$message("输入不符合要求");
                     }

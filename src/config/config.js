@@ -1,9 +1,10 @@
 /**
  * Created by zz on 2017/6/1.
  */
-let host="http://localhost:3000/systemManage";
+let host="http://localhost:3000/";
 let path={
-    systemList:"/systemList"
+    login:"mongo/login",
+    systemList:"/systemList",
 };
 export {
     host,

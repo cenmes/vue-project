@@ -2,7 +2,7 @@
  * Created by zz on 2017/6/1.
  */
 import $ from './jquery';
-import {host} from "../../config/config"
+import {host} from "../../config/config";
 $.request=function (path,options) {
     $.ajax(host+path,{
         data:options.data||{},
@@ -14,5 +14,12 @@ $.request=function (path,options) {
             options.error&&options.error();
         }
     })
+};
+$.setStorage =  function (key,value) {
+   window.localStorage.setItem(key,JSON.stringify(value))
+};
+
+$.getStorage = function (key) {
+    return JSON.parse(window.localStorage.getItem(key))
 };
 export default $;
