@@ -1,75 +1,62 @@
 <template>
     <!--右键菜单和右侧滑出-->
     <div class="test adjust">
-        <div class="adjust ui-flex ui-flex-center">
-            <div class="button" v-right-click="fn">rihgt key</div>
-            <div style="padding: 10px;border: 1px solid #32c081;" @click="clickHandler">{{label}}</div>
-        </div>
-        <transition name="slide-fade">
-            <div class="right-side" v-if="show">
-                <div style="height: 1000em; background-color: red;"></div>
-            </div>
-        </transition>
-
+        <radio v-model="sex" :data="sexData" direction="hor"></radio>
+        <child ref="child"></child>
+        <input type="button" value="刷新子组件" @click="btnClick">
     </div>
 </template>
 <script>
+    var event=require('events');
+    var util=require('util');
+    var fn=function(){
+
+    };
+    util.inherits(fn,event.EventEmitter);
+    var page=new event.EventEmitter();
+    import child from "./child.vue";
+    import $ from '../static/js/jquery';
+    import server from "server";
+    import radio from "../ui/radio/radio.vue";
     export default {
         data() {
             return {
-                label:"显示",
-                show:false,
+                sex:1,
+                sexData:[{
+                    label:"男",
+                    value:1
+                },{
+                    label:"女",
+                    value:2
+                }]
             };
         },
         methods: {
-            clickHandler(){
-                if(this.show){
-                    this.show=false;
-                    this.label="显示"
-                }else {
-                    this.show=true;
-                    this.label="隐藏"
-                }
-            },
-            fn(){
-              alert(this.label)
-            },
-            look(){
-                let arr=[];
-                for(let key in this.value){
-                    let obj={};
-                    obj.payType=key;
-                    obj.payMoney=parseFloat(this.value[key])||0;
-                    arr.push(obj)
-                }
-                console.log(JSON.stringify(arr));
-            },
-            rightKey(e){
-                if(e.button===2){
-                    alert("你龟儿子点了右键")
-                }
+            btnClick(){
+               page.emit('refreshChild');
             }
+        },
+        created(){
+            console.log(fn.prototype);
+            page.on('refreshChild',function(){
+                this.$refs.child.refresh();
+            }.bind(this));
+            $.post(server.test,function (res) {
+                console.log(res);
+            })
         },
         computed:{
-            getTotal(){
-                let total=0,curr;
-                for(let key in this.value){
-                    curr=parseFloat(this.value[key])||0;
-                    total+=curr;
-                }
-                return total;
-            }
         },
         watch:{
-            getTotal(val){
-                this.total=val;
+            radio(val){
+                console.log(val);
             }
         },
         mounted() {
-            console.log(Vue);
-            document.oncontextmenu=function () {
-                return false;
-            }
+        },
+        components:{
+            child,
+            radio
         }
     }
 </script>
