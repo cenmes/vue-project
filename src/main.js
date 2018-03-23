@@ -8,6 +8,7 @@ import routes from './router/router';
 import stores from './store/store';
 import {path} from "./config/config";
 import $ from "./static/js/common";
+import ui from './ui';
 Vue.directive("right-click",{
     bind(el,binding){
         console.log(this);
@@ -18,7 +19,8 @@ Vue.directive("right-click",{
         })
     }
 });
-Vue.use(ElementUI);
+Vue.use(ui);
+// Vue.use(ElementUI);
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.permissions=["login","systemManage","interfaceManage","cp"];

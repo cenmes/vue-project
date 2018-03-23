@@ -14,7 +14,7 @@
 
 <script>
     export default {
-        name: "radio",
+        name: "UiRadio",
         props:{
             data:{
                 type:Array,

@@ -13,17 +13,24 @@
         },
         methods: {
             refresh(){
-                this.input="";
+                alert("刷新子组件")
             }
         },
         computed: {},
         created(){
-
+            this.$on('test',function () {
+                console.log("test",new Date().getTime());
+            });
+            this.$emit("test");
         },
         mounted(){
 
         },
-        watch: {}
+        watch: {
+            input(val){
+                this.$parent.refresh(this.input);
+            }
+        }
     }
 </script>
 

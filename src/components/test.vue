@@ -1,9 +1,14 @@
 <template>
     <!--右键菜单和右侧滑出-->
     <div class="test adjust">
-        <radio v-model="sex" :data="sexData" direction="hor"></radio>
+        <child></child>
+        <ui-radio v-model="sex" :data="sexData" direction="hor"></ui-radio>
         <child ref="child"></child>
         <input type="button" value="刷新子组件" @click="btnClick">
+        <div style="height: 100px;">
+            <loading></loading>
+        </div>
+        <pagination  :layout="paginationLayout" :total="2000" background></pagination>
     </div>
 </template>
 <script>
@@ -17,7 +22,8 @@
     import child from "./child.vue";
     import $ from '../static/js/jquery';
     import server from "server";
-    import radio from "../ui/radio/radio.vue";
+    import loading from "../ui/loading/loading.vue";
+    import pagination from "../ui/pagination/paganation.vue";
     export default {
         data() {
             return {
@@ -28,12 +34,22 @@
                 },{
                     label:"女",
                     value:2
-                }]
+                }],
+                paginationLayout:{
+                    prev:true,
+                    next:true,
+                    jump:true,
+                    total:true,
+                    pager:[5,10],
+                }
             };
         },
         methods: {
             btnClick(){
-               page.emit('refreshChild');
+              this.$refs.child.refresh()
+            },
+            refresh(msg){
+                alert(msg)
             }
         },
         created(){
@@ -41,9 +57,6 @@
             page.on('refreshChild',function(){
                 this.$refs.child.refresh();
             }.bind(this));
-            $.post(server.test,function (res) {
-                console.log(res);
-            })
         },
         computed:{
         },
@@ -56,8 +69,10 @@
         },
         components:{
             child,
-            radio
-        }
+            loading,
+            pagination
+        },
+
     }
 </script>
 
