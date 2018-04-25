@@ -1,52 +1,52 @@
 <template>
-    <div class="pagination">
-        <div class="pagination-total" v-if="layout.total&&total">共&nbsp;{{total}}&nbsp;条</div>
-        <div class="pagination-pager" v-if="pager">
-            <select>
-                <template v-for="item in pager">
-                    <option>{{item}}</option>
+    <div class="pagination-container">
+        <div class="pagination">
+            <div class="pagination-total" v-if="layout.total&&total">共&nbsp;{{total}}&nbsp;条</div>
+            <div class="pagination-pager" v-if="pager">
+                <ui-select v-model="size" :options="pager" width="100px"></ui-select>
+            </div>
+            <div class="pagination-main">
+                <!--上一页-->
+                <div
+                        class="pagination-main__prev pagination-main__btn"
+                        v-if="layout.prev"
+                        @click="prev"
+                        :class="{'bg':background,'disable':current===1}">{{prevText}}</div>
+                <!--页码部分-->
+                <template v-for="item in pageArr">
+                    <template v-if="item==='prev'">
+                        <div class="pagination-main__item" @click="prevStep" :class="{'bg':background}">{{"<<"}}</div>
+                    </template>
+                    <template v-else-if="item==='next'">
+                        <div class="pagination-main__item" @click="nextStep" :class="{'bg':background}">{{">>"}}</div>
+                    </template>
+                    <template v-else>
+                        <div
+                                class="pagination-main__page"
+                                :class="{'bg':background,'active':item===current}"
+                                @click="setCurrentPage(item)"
+                        >{{item}}</div>
+                    </template>
                 </template>
-            </select>
-        </div>
-        <div class="pagination-main">
-            <!--上一页-->
-            <div
-                    class="pagination-main__prev pagination-main__btn"
-                    v-if="layout.prev"
-                    @click="prev"
-                    :class="{'bg':background,'disable':current===1}">{{prevText}}</div>
-            <!--页码部分-->
-            <template v-for="item in pageArr">
-                <template v-if="item==='prev'">
-                    <div class="pagination-main__item" @click="prevStep" :class="{'bg':background}">{{"<<"}}</div>
-                </template>
-                <template v-else-if="item==='next'">
-                    <div class="pagination-main__item" @click="nextStep" :class="{'bg':background}">{{">>"}}</div>
-                </template>
-                <template v-else>
-                    <div
-                            class="pagination-main__page"
-                            :class="{'bg':background,'active':item===current}"
-                            @click="setCurrentPage(item)"
-                    >{{item}}</div>
-                </template>
-            </template>
-            <!--下一页-->
-            <div
-                    class="pagination-main__next pagination-main__btn"
-                    v-if="layout.next"
-                    @click="next"
-                    :class="{'bg':background,'disable':current===count}">{{nextText}}</div>
-        </div>
-        <div class="pagination-jump" v-if="layout.jump">
-            <span>前往</span>
-            <input type="text" style="width: 50px;" v-model="input" @keydown="inputPage" @blur="jump"/>
-            <span>页</span>
+                <!--下一页-->
+                <div
+                        class="pagination-main__next pagination-main__btn"
+                        v-if="layout.next"
+                        @click="next"
+                        :class="{'bg':background,'disable':current===count}">{{nextText}}</div>
+            </div>
+            <div class="pagination-jump" v-if="layout.jump">
+                <span>前往</span>
+                <ui-input v-model="input" @keydown="inputPage" @blur="jump" width="70px"></ui-input>
+                <span>页</span>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import uiSelect from "../select";
+    import uiInput from "../input";
     export default {
         name: "paganation",
         props:{
@@ -91,43 +91,59 @@
             return{
                 current:this.currentPage,
                 size:this.pageSize,
-                input:this.current
+                input:this.currentPage
             }
         },
         methods:{
             setCurrentPage(num){
                 this.current=num;
+                this.input=num;
             },
             prev(){
                 if (this.current>1){
                     this.current--;
+                    this.input=this.current;
                 }
             },
             next(){
                 if(this.current<this.count){
                     this.current++;
+                    this.input=this.current;
                 }
             },
             prevStep(){
                 if(this.current>5){
                     this.current-=5;
+                    this.input=this.current;
                 }else {
                     this.current=1;
+                    this.input=this.current;
                 }
             },
             nextStep(){
                 if(this.current+5<this.count){
                     this.current+=5;
+                    this.input=this.current;
                 }else {
                     this.current=this.count;
+                    this.input=this.current;
                 }
             },
             jump(){
-                let input=parseInt(this.input)
-                if(input&&input<=this.count&&input>=1){
-                    this.input=input;
-                    this.current=input;
+                let input=parseInt(this.input);
+                let num=0;
+                if(!input)return;
+                if(input<=this.count&&input>=1){
+                    num=input
                 }
+                if(input>this.count){
+                    num=this.count;
+                }
+                if(input<=1){
+                    num=1;
+                };
+                this.input=num;
+                this.current=num;
             },
             inputPage(e){
                 let keyCode=e.keyCode;
@@ -139,13 +155,42 @@
             }
         },
         computed:{
+            pagerLeft(){
+                var left=0;
+                console.log(this.$el);
+                left+=this.layout.total?this.$el.querySelector('.pagination-total').offsetWidth+'20':0;
+                return left;
+            },
+            mainLeft(){
+                var left=0;
+                left+=this.layout.total?this.pagerLeft:0;
+                left+=this.layout.pager?document.querySelector('.pagination-pager').offsetWidth+20:0;
+                return left;
+            },
+            jumpLeft(){
+              var left=0;
+              left+=this.layout.total?this.pagerLeft:0;
+              left+=this.layout.pager?this.mainLeft:0;
+              left+=document.querySelector('.pagination-main').offsetWidth+20;
+              return left;
+            },
+            totalWidth(){
+                return this.layout.jump?this.jumpLeft+document.querySelector('.pagination-jump').offsetWidth:this.jumpLeft;
+            },
             pager(){
                 if(!this.layout.pager) return false;
+                let arr=[];
                 if(this.layout.pager instanceof Array){
-                    return this.layout.pager;
+                    arr=this.layout.pager;
                 }else {
-                    return [10,20,30,40]
+                    arr=[10,20,30,40]
                 }
+                return arr.map(function (item) {
+                    return {
+                        label:item+" 条/页",
+                        value:item
+                    }
+                });
             },
             count(){
                 let count=0;
@@ -156,7 +201,7 @@
                 if(this.pageCount){
                     count=this.pageCount;
                 }else {
-                    count=Math.ceil(this.total/this.pageSize);
+                    count=Math.ceil(this.total/this.size);
                 }
                 return count;
             },
@@ -186,12 +231,15 @@
                         arr=arr.concat(['next',count]);
                     }
                 }else {
-                    arr=[1,2,3,4,5,6,7]
+                    for(let i=0;i<=count;i++){
+                        arr.push(i)
+                    }
                 }
                 return arr;
             }
         },
         created(){
+            console.log(this.$el.clientWidth)
         },
         watch:{
             current(val){
@@ -209,17 +257,26 @@
                     pageSize:this.size
                 })
             }
+        },
+        components:{
+            uiSelect,
+            uiInput
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    .pagination-container{
+        position: relative;
+        height: 40px;
+    }
     .pagination{
-        float: right;
-        height: 30px;
+        position: absolute;
+        right: 0;
+        height: 100%;
         padding: 5px 0;
         line-height: 30px;
-        min-width: 750px;
+        box-sizing: border-box;
         font-size: 14px;
         *{
             user-select: none;

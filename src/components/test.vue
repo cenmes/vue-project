@@ -1,76 +1,60 @@
 <template>
     <!--右键菜单和右侧滑出-->
     <div class="test adjust">
-        <child></child>
-        <ui-radio v-model="sex" :data="sexData" direction="hor"></ui-radio>
-        <child ref="child"></child>
-        <input type="button" value="刷新子组件" @click="btnClick">
-        <div style="height: 100px;">
-            <loading></loading>
+        <div class="nav ui-flex">
+            <div class="item" :class="{'active':index<=length[0]}">一</div>
+            <div class="item" :class="{'active':length[0]<index&&index<=length[1]}">二</div>
+            <div class="item" :class="{'active':length[1]<index&&index<=length[2]}">三</div>
         </div>
-        <pagination  :layout="paginationLayout" :total="2000" background></pagination>
+        <div class="content">
+            <template v-for="(item,i) in datas">
+                <div class="item" v-show="i<index&&i>=(index-3)">{{item}}</div>
+            </template>
+        </div>
     </div>
 </template>
 <script>
-    var event=require('events');
-    var util=require('util');
-    var fn=function(){
-
-    };
-    util.inherits(fn,event.EventEmitter);
-    var page=new event.EventEmitter();
-    import child from "./child.vue";
-    import $ from '../static/js/jquery';
-    import server from "server";
-    import loading from "../ui/loading/loading.vue";
-    import pagination from "../ui/pagination/paganation.vue";
+    import moduleA from "./test";
     export default {
         data() {
             return {
-                sex:1,
-                sexData:[{
-                    label:"男",
-                    value:1
-                },{
-                    label:"女",
-                    value:2
-                }],
-                paginationLayout:{
-                    prev:true,
-                    next:true,
-                    jump:true,
-                    total:true,
-                    pager:[5,10],
-                }
+                data:[
+                    [11,12,13],
+                    [21,22,23,24,25,26],
+                    [31,32,33]
+                ],
+                datas:[],
+                index:3,
+                length:[],
             };
         },
         methods: {
-            btnClick(){
-              this.$refs.child.refresh()
-            },
-            refresh(msg){
-                alert(msg)
-            }
         },
         created(){
-            console.log(fn.prototype);
-            page.on('refreshChild',function(){
-                this.$refs.child.refresh();
-            }.bind(this));
+            this.datas=[...this.data[0],...this.data[1],...this.data[2]];
+            var l1=this.data[0].length;
+            var l2=l1+this.data[1].length;
+            var l3=l2+this.data[2].length
+            this.length=[
+               l1,l2,l3
+            ]
+            var length=this.datas.length;
+            setInterval(()=>{
+                if(this.index+3<=length){
+                    this.index+=3;
+                    console.log(new Date().getTime())
+                }else {
+                    this.index=3;
+                }
+            },1000)
         },
         computed:{
         },
         watch:{
-            radio(val){
-                console.log(val);
-            }
         },
         mounted() {
         },
         components:{
-            child,
-            loading,
-            pagination
         },
 
     }
@@ -80,6 +64,24 @@
     @import "../static/css/ui";
     .test{
         overflow: hidden;
+        padding: 20px;
+        .nav{
+            .item{
+                width: 100px;
+                text-align: center;
+            }
+            .active{
+                color: red;
+            }
+        }
+        .content{
+            .item{
+                line-height: 30px;
+            }
+            .item:nth-child(odd){
+                background: #8ba4af;
+            }
+        }
         .button{
             padding: 10px;border: 1px solid #32c081;
         }

@@ -23,5 +23,11 @@
             return Object.prototype.toString.call(param)==="[object "+item+"]"
         }
     });
+    z.getDefaultFontSize=function() {
+        var d=document.createElement('div');
+        d.style.width="1rem";
+        document.body.appendChild(d);
+        return window.getComputedStyle(d,null).getPropertyValue('width');
+    }
     return z;
 }));

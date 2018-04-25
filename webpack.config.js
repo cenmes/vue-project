@@ -1,6 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
-console.log(path.resolve(__dirname,"./src/config/server.js"));
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
 module.exports = {
   entry: ['./src/main.js'],
   output: {
@@ -59,6 +59,10 @@ module.exports = {
           '/test': {
               target: 'http://localhost:3000',
               secure: false
+          },
+          '/v1':{
+              target: 'http://192.168.193.195:8080',
+              secure: false
           }
       }
   },
@@ -85,6 +89,12 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
-    })
+    }),
+      new PrerenderSPAPlugin({
+          // Required - The path to the webpack-outputted app to prerender.
+          staticDir: path.join(__dirname, 'dist'),
+          // Required - Routes to render.
+          routes: [ '/', '/test'],
+      })
   ])
 }

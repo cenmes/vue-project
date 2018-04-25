@@ -5,8 +5,22 @@
     <title>Title</title>
 </head>
 <body>
-<div>I'm a iframe</div>
+<input type="text">
+<script src="src/static/js/jquery.js"></script>
+<script src="src/static/js/moment.js"></script>
 <script>
+    //年龄在 18-100岁之间
+    function checkAge(date) {
+        var now=moment();
+        var max=moment([now.year(),now.month(),now.date()]).subtract(100, 'years');
+        var min=moment([now.year(),now.month(),now.date()]).subtract(18, 'years');
+        return moment(date).isBefore(min)&&moment(date).isAfter(max);
+    }
+    function threeMonthAfter(date){
+        var now=moment();
+        var min=moment([now.year(),now.month(),now.date()]).add(3, 'M');
+        return moment(date).isAfter(min);
+    }
 </script>
 </body>
 </html>

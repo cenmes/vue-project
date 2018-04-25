@@ -3,15 +3,17 @@ import App from './App.vue'
 import ElementUI from 'element-ui'
 import Vuex from 'vuex';
 import 'element-ui/lib/theme-default/index.css'
+import "./static/css/iconfont.css"
 import VueRouter from 'vue-router';
 import routes from './router/router';
 import stores from './store/store';
 import {path} from "./config/config";
 import $ from "./static/js/common";
 import ui from './ui';
+import clickOutside from "./ui/utils/clickoutside";
 Vue.directive("right-click",{
-    bind(el,binding){
-        console.log(this);
+    bind(el, binding, vnode){
+        console.log(el,binding,vnode);
         el.addEventListener('mouseup',function (e) {
             if(e.button===2){
                 binding.value();
@@ -19,6 +21,7 @@ Vue.directive("right-click",{
         })
     }
 });
+Vue.directive("clickoutside",clickOutside);
 Vue.use(ui);
 // Vue.use(ElementUI);
 Vue.use(VueRouter);

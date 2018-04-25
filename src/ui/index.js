@@ -1,7 +1,15 @@
 import radio from "./radio";
 import Alert from "./alert";
+import Input from "./input"
+import Select from "./select";
+import Switch from "./switch";
+import Checkbox from "./checkbox";
 const components=[
     radio,
+    Input,
+    Select,
+    Switch,
+    Checkbox
 ];
 function install(Vue) {
     components.forEach(function (component) {

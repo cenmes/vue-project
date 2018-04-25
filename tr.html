@@ -1,92 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        // function getDefaultFontSize() {
+        //     var d=document.createElement('div');
+        //     d.style.width="1rem";
+        //     console.log(document.body)
+        //     document.body.appendChild(d);
+        //     return window.getComputedStyle(d,null).getPropertyValue('width');
+        // }
+        // var fontSize=window.innerWidth/19.2+"px";
+        // document.documentElement.style.fontSize=fontSize;
+    </script>
+    <title>发表评论场景</title>
     <style>
-        .alert {
-            position: fixed;
-            width: 100%;
-            top: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, .35);
+        *{
+            padding: 0;
+            margin: 0;
         }
-        .alert__container{
-            width: 200px;
-            background-color: #ffffff;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%,-50%);
-        }
-        .alert__header{
-            position: relative;
+        .d1{
+            width: 10rem;
+            font-size: 16px;
+            display: inline-block;
             line-height: 30px;
-            padding: 0 16px;
-            background-color: #8ba4af;
-        }
-        .alert__close{
-            position: absolute;
-            background-color: rgba(0,0,0,.35);
-            right: 0;
-            top: 0;
-            padding: 0 16px;
-            cursor: pointer;
-        }
-        .alert__close:hover{
-            background-color: rgba(0,0,0,.5);
-        }
-        .alert__content{
-            padding: 16px;
+            border: 1px solid #c6c6c6;
         }
     </style>
 </head>
 <body>
+<div class="d1">dssddsdsd</div>
+<div class="content">
+
+</div>
+
+<script src="./src/static/js/jquery.js"></script>
+
 <script>
-    (function () {
-        var alertList=[];
-        let [hasCreated]=[false];
-        var $alert=function (msg) {
-            alertList.push(msg);
-            if(!hasCreated){
-                hasCreated=true;
-                created();
-                showNextMsg();
-            }
-        };
-        function showNextMsg() {
-            document.querySelector('.alert').style.display='none';
-            if (alertList.length){
-                let msg=alertList.shift();
-                document.querySelector('.alert__content').innerText=msg;
-                setTimeout(function () {
-                    document.querySelector('.alert').style.display='block';
-                },100)
-            }
-        }
-        function created() {
-            var div=document.createElement('div');
-            div.className="alert";
-            var html=`
-        <div class="alert__container">
-            <div class="alert__header">
-                <div class="alert__title">提示</div>
-                <div class="alert__close">&times;</div>
-            </div>
-            <div class="alert__content"></div>
-        </div>`
-            div.innerHTML=html;
-            document.body.appendChild(div);
-        }
-        document.addEventListener('click',function (e) {
-         if(e.target===document.querySelector('.alert__close')){
-             showNextMsg();
-         }
-        });
-        window.$alert=$alert;
-    })();
-    $alert(1);
-    $alert(2);
 </script>
 </body>
 </html>

@@ -4,26 +4,60 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        .ui-box{
-            /*display:-webkit-box;  !* iOS 6-, Safari 3.1-6 *!*/
-            /*display:-webkit-flex; !* Chrome *!*/
-            /*display:-moz-box;     !* Firefox 19 *!*/
-            /*display:flex;  !*flex容器*!*/
-            display:-ms-flexbox;
+        *{
+            padding: 0 ;
+            margin: 0;
         }
-        .ui-box-row{
-            -webkit-flex-direction: row;
-            -moz-flex-direction: row;
-            -ms-flex-direction: row;
-            -o-flex-direction: row;
-            flex-direction:row;
+        .box{
+            position: relative;
+            display: inline-block;
+            width: 200px;
+            padding: 0 15px;
+            border: 1px solid #c6c6c6;
+            height: 30px;
+            line-height: 30px;
+        }
+        .content{
+            position: absolute;
+            top: 35px;
+            left: 0;
+            right: 0;
+            transition: all 300ms ease;
+            /*transform: translate3d(0,0,0);*/
+            height: 0;
+            overflow: hidden;
+        }
+        .content>div{
+            border: 1px solid #c6c6c6;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .show{
+            height: 300px;
+            right: -100px;
         }
     </style>
 </head>
 <body>
-<div class="ui-box ui-box-row">
-    <div>1</div>
-    <div>2</div>
+<div class="box">
+    <div class="title">弹出</div>
+    <div class="content">
+       <div style="padding: 8px;">
+           就会发生迪斯科解放的地方疯狂减肥的时刻和JFK发多少空间
+       </div>
+    </div>
 </div>
+<script src="./src/static/js/jquery.js"></script>
+<script>
+    document.querySelector('.title').addEventListener('click',function (e) {
+        let t=document.querySelector('.content')
+        if(t.classList.contains('show')){
+            t.classList.remove('show');
+
+        }else {
+            t.classList.add('show');
+        }
+    })
+</script>
 </body>
 </html>
